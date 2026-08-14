@@ -253,3 +253,69 @@ ffmpeg -i out.png -vf "crop=1:1:<邊框上一點>" -f rawvideo -pix_fmt rgba - |
 - [How to Mask in CapCut PC - Beginners Tutorial](https://www.youtube.com/watch?v=w-8P5qI2kfo)
 
 相關記憶檔：`~/.claude/projects/C--Users-B00332-workspace-kindle-45-ai-video-toolbox/memory/capcut-png-overlay-annotation.md`
+
+---
+
+## 📋 接續用 Prompt（直接複製貼上到新的 Claude Code session）
+
+### 版本 A — 回公司機接續（主要）
+
+```text
+接續 CapCut 螢幕錄影標註工作（紅框＋馬賽克）。
+
+先完整讀這份交接文件：
+%USERPROFILE%\workspace\kindle-45-ai-video-toolbox\doc\capcut-螢幕錄影標註-handoff-2026-08-14.md
+
+依文件執行，順序如下：
+
+【第 1 步 · 清理】CapCut 專案「0814 (1)」目前是半成品狀態，必須先修：
+  a. 有一條疊加軌被設為隱藏（軌道標頭的眼睛圖示被點掉），那條軌上有
+     19.8s 的 redbox_sms_v2.png 和 53s 的 annot_53_namelist.png 兩個紅框圖層。
+     維持隱藏會導致匯出影片少掉這兩個紅框 —— 再點一次眼睛圖示取消隱藏。
+  b. 有一個殘留的形狀貼紙（向量影像，51.833s 起 3 秒，110×45 灰色方塊，
+     位置沒對到文字），選取後 Delete 刪掉。
+  c. 清理後對照文件裡「目前專案應有的時間軸狀態」那張表逐項確認。
+     （中止前按過一次 Ctrl+Z，未確認撤銷了什麼，所以要逐項比對。）
+
+【第 2 步 · 實驗】測「動態追蹤能不能跟住捲動的終端機文字」，
+  依文件「建議的測試方法」那節做：
+  - 貼圖→形狀→矩形，拖到疊加軌，時間設 55.5 → 58.5s
+  - 播放器裡把矩形放到「名單載入」上
+  - 右側面板 → 追蹤 → 動態追蹤，框選追蹤區域
+  - 逐格檢查 56.267s 前後：矩形有沒有跟著文字往上走
+  判讀標準：能跟上（或最多延遲 1-2 格）= 可用；完全不動或亂飄 = 失敗。
+
+【第 3 步 · 結論】依實驗結果決定往後所有螢幕錄影標註的標準流程：
+  - 追蹤可行 → 改用「形狀貼紙＋動態追蹤」，不再需要定格
+  - 追蹤不可行 → 沿用「形狀貼紙／馬賽克遮罩 ＋ 定格」，PNG 圖層法退役
+  結論寫回記憶檔 capcut-png-overlay-annotation.md。
+
+環境備忘（這台是公司機 NB00547）：
+- 官方 screen-capture MCP 工具在這台會噴 PowerShell 編碼錯誤，不能用。
+  改用 %TEMP% 下既有的 PowerShell 腳本：screenshot.ps1 / get_rect2.ps1 /
+  single_click.ps1 / dblclick.ps1 / right_click.ps1 / slow_drag.ps1 /
+  send_key.ps1 / enum_pid.ps1
+- CapCut 視窗座標每次都要重新 EnumWindows 取得，不可沿用舊值（多螢幕會飄移）。
+- 素材庫搜尋只吃英文關鍵字，中文搜不到。
+```
+
+### 版本 B — 在家用機研究（不碰 CapCut）
+
+```text
+我在家用機，要研究 CapCut 螢幕錄影標註的做法。
+注意：這台沒有 CapCut 專案「0814 (1)」，也沒有來源影片（138MB，在公司機 NB00547）。
+不要嘗試操作 CapCut，實際剪輯要回公司機做。
+
+先讀這份交接文件（若本機沒 clone 過 repo 就先 git clone
+https://github.com/chenghyang2001/kindle-45-ai-video-toolbox.git）：
+doc/capcut-螢幕錄影標註-handoff-2026-08-14.md
+
+然後幫我做三件事：
+1. 針對「動態追蹤能不能跟住捲動的終端機文字」這題做網路研究 ——
+   有沒有人做過類似實驗？追蹤器對低對比等寬字、跳躍式捲動的已知限制是什麼？
+2. 比較其他螢幕錄影標註工具（Camtasia / ScreenPal / Descript 等）
+   對「區域高亮＋馬賽克＋跟隨捲動」這組需求的原生支援程度，
+   評估值不值得為這類影片換工具。
+3. 產出一份「回公司機後照著點就能完成」的操作腳本，
+   涵蓋交接文件裡的清理步驟＋追蹤實驗步驟。
+```
